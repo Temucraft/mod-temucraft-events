@@ -1,0 +1,55 @@
+[worldserver]
+
+########################################
+# mod-temucraft-events
+########################################
+#
+#    Temucraft.Events.Invasion.Enable
+#        Description: Elemental invasions in Un'goro Crater, Silithus, Azshara and Winterspring.
+#        Default:     1
+
+Temucraft.Events.Invasion.Enable = 1
+
+#
+#    Temucraft.Events.Invasion.MinDaysBetween
+#    Temucraft.Events.Invasion.MaxDaysBetween
+#        Description: Days between the end of one invasion and the start of the next (random in this range).
+#        Default:     2, 4
+
+Temucraft.Events.Invasion.MinDaysBetween = 2
+Temucraft.Events.Invasion.MaxDaysBetween = 4
+
+#
+#    Temucraft.Events.Invasion.MaxHours
+#        Description: An invasion ends after this many hours even if lords are still alive (0 = never).
+#        Default:     72
+
+Temucraft.Events.Invasion.MaxHours = 72
+
+#
+#    Temucraft.Events.Invasion.Stages
+#    Temucraft.Events.Invasion.KillsPerStage
+#    Temucraft.Events.Invasion.StageMinutes
+#        Description: Each zone climbs this many stages; a stage ends after KillsPerStage invaders die or after
+#                     StageMinutes (0 = kills only). After the last stage the zone's lord appears.
+#        Default:     4, 50, 60
+
+Temucraft.Events.Invasion.Stages = 4
+Temucraft.Events.Invasion.KillsPerStage = 50
+Temucraft.Events.Invasion.StageMinutes = 60
+
+#
+#    Temucraft.Events.Invasion.MinInvadersPerRift
+#    Temucraft.Events.Invasion.MaxInvadersPerRift
+#        Description: Invaders kept around each rift: Min at stage 1, one more per stage, up to Max.
+#        Default:     3, 6
+
+Temucraft.Events.Invasion.MinInvadersPerRift = 3
+Temucraft.Events.Invasion.MaxInvadersPerRift = 6
+
+#
+#    Temucraft.Events.Invasion.Announce
+#        Description: Server-wide messages when rifts open, stages rise and lords appear or fall.
+#        Default:     1
+
+Temucraft.Events.Invasion.Announce = 1
