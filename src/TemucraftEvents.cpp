@@ -11,8 +11,8 @@
  * when the rift opens, so points follow the terrain the server actually uses. Progress is kept in world states
  * (saved), so an invasion survives a restart.
  *
- *   .invasion            status
- *   .invasion start|stop (GM)
+ *   .temucraft invasion            status
+ *   .temucraft invasion start|stop (GM)
  */
 
 #include "Chat.h"
@@ -454,11 +454,11 @@ namespace TemucraftEvents
         {
             static ChatCommandTable invasion =
             {
-                { "",      HandleStatus, SEC_PLAYER,     Console::Yes },
+                { "",      HandleStatus, 100450,     Console::Yes },
                 { "start", HandleStart,  100401 /* SEC_GAMEMASTER -> RBAC */, Console::Yes },
                 { "stop",  HandleStop,   100402 /* SEC_GAMEMASTER -> RBAC */, Console::Yes },
             };
-            static ChatCommandTable root = { { "invasion", invasion } };
+            static ChatCommandTable root = { { "temucraft invasion", invasion } };
             return root;
         }
 
