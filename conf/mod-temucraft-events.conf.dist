@@ -53,3 +53,45 @@ Temucraft.Events.Invasion.MaxInvadersPerRift = 6
 #        Default:     1
 
 Temucraft.Events.Invasion.Announce = 1
+
+#
+#    Temucraft.Events.Invasion.SpawnMinDistance
+#        Description: Nearest yards from a rift that invaders appear.
+#        Default:     8
+
+Temucraft.Events.Invasion.SpawnMinDistance = 8
+
+#
+#    Temucraft.Events.Invasion.SpawnMaxDistance
+#        Description: Furthest yards from a rift that invaders appear.
+#        Default:     30
+
+Temucraft.Events.Invasion.SpawnMaxDistance = 30
+
+#
+#    Temucraft.Events.Invasion.WanderDistance
+#        Description: Yards invaders wander around where they appeared.
+#        Default:     20
+
+Temucraft.Events.Invasion.WanderDistance = 20
+
+#
+#    Temucraft.Events.Invasion.InvaderLifetime
+#        Description: Minutes an invader stays if nobody kills it.
+#        Default:     120
+
+Temucraft.Events.Invasion.InvaderLifetime = 120
+
+#
+#    Temucraft.Events.Invasion.InvaderCorpseSeconds
+#        Description: Seconds a slain invader's corpse stays.
+#        Default:     300
+
+Temucraft.Events.Invasion.InvaderCorpseSeconds = 300
+
+#
+#    Temucraft.Events.Invasion.LordCorpseSeconds
+#        Description: Seconds a slain elemental lord's corpse stays.
+#        Default:     600
+
+Temucraft.Events.Invasion.LordCorpseSeconds = 600

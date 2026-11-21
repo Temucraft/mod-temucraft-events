@@ -79,6 +79,10 @@ namespace TemucraftEvents
         uint32 killsPerStage = 50;
         uint32 stageMinutes = 60;      // a stage also rises on its own after this long
         uint32 minPerRift = 3, maxPerRift = 6;
+        float spawnMin = 8.0f, spawnMax = 30.0f;
+        float wander = 20.0f;
+        uint32 invaderLifetime = 2 * HOUR;
+        uint32 invaderCorpse = 5 * MINUTE, lordCorpse = 10 * MINUTE;
         bool announce = true;
     } cfg;
 
@@ -114,6 +118,12 @@ namespace TemucraftEvents
         cfg.stageMinutes = sConfigMgr->GetOption<uint32>("Temucraft.Events.Invasion.StageMinutes", 60);
         cfg.minPerRift = sConfigMgr->GetOption<uint32>("Temucraft.Events.Invasion.MinInvadersPerRift", 3);
         cfg.maxPerRift = std::max(cfg.minPerRift, sConfigMgr->GetOption<uint32>("Temucraft.Events.Invasion.MaxInvadersPerRift", 6));
+        cfg.spawnMin = sConfigMgr->GetOption<float>("Temucraft.Events.Invasion.SpawnMinDistance", 8.0f);
+        cfg.spawnMax = sConfigMgr->GetOption<float>("Temucraft.Events.Invasion.SpawnMaxDistance", 30.0f);
+        cfg.wander = sConfigMgr->GetOption<float>("Temucraft.Events.Invasion.WanderDistance", 20.0f);
+        cfg.invaderLifetime = sConfigMgr->GetOption<uint32>("Temucraft.Events.Invasion.InvaderLifetime", 120) * MINUTE;
+        cfg.invaderCorpse = sConfigMgr->GetOption<uint32>("Temucraft.Events.Invasion.InvaderCorpseSeconds", 300);
+        cfg.lordCorpse = sConfigMgr->GetOption<uint32>("Temucraft.Events.Invasion.LordCorpseSeconds", 600);
         cfg.announce = sConfigMgr->GetOption<bool>("Temucraft.Events.Invasion.Announce", true);
     }
 
@@ -219,7 +229,7 @@ namespace TemucraftEvents
             while (s.invaders.size() < want)
             {
                 float angle = frand(0.0f, 2.0f * float(M_PI));
-                float dist = frand(8.0f, 30.0f);
+                float dist = frand(cfg.spawnMin, std::max(cfg.spawnMin, cfg.spawnMax));
                 Point p = s.point;
                 p.x += dist * std::cos(angle);
                 p.y += dist * std::sin(angle);
@@ -227,15 +237,15 @@ namespace TemucraftEvents
                 if (std::fabs(z - s.point.z) > 15.0f)
                     z = s.point.z;
                 Position pos(p.x, p.y, z + 0.5f, angle);
-                TempSummon* c = map->SummonCreature(Elements[e].invader, pos, nullptr, 2 * HOUR * IN_MILLISECONDS);
+                TempSummon* c = map->SummonCreature(Elements[e].invader, pos, nullptr, cfg.invaderLifetime * IN_MILLISECONDS);
                 if (!c)
                     break;
                 c->SetTempSummonType(TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN);
                 c->SetHomePosition(pos);
-                c->SetWanderDistance(20.0f);
+                c->SetWanderDistance(cfg.wander);
                 c->SetDefaultMovementType(RANDOM_MOTION_TYPE);
-                c->GetMotionMaster()->MoveRandom(20.0f);
-                c->SetCorpseDelay(5 * MINUTE);
+                c->GetMotionMaster()->MoveRandom(cfg.wander);
+                c->SetCorpseDelay(cfg.invaderCorpse);
                 s.invaders.push_back(c->GetGUID());
             }
         }
@@ -255,7 +265,7 @@ namespace TemucraftEvents
             {
                 lord->SetTempSummonType(TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN);
                 lord->setActive(true);
-                lord->SetCorpseDelay(10 * MINUTE);
+                lord->SetCorpseDelay(cfg.lordCorpse);
                 sLords[e] = lord->GetGUID();
                 Announce(std::string(Elements[e].lordName) + " has come through the rifts in " + Elements[e].zoneName + "!");
             }
