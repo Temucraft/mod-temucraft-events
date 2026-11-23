@@ -16,6 +16,7 @@
  */
 
 #include "Chat.h"
+#include "WorldSessionMgr.h"
 #include "TemucraftModuleText.h"
 #include "ChatCommand.h"
 #include "CommandScript.h"
@@ -144,7 +145,13 @@ namespace TemucraftEvents
     void Announce(std::string const& text)
     {
         if (cfg.announce)
-            ChatHandler(nullptr).SendWorldText("|cffff8000[Elemental Invasion]|r " + text);
+        {
+            // ChatHandler(nullptr) has no session to send to (it asserted and took the server down): build the
+            // system message once and send it to everyone online.
+            WorldPacket data;
+            ChatHandler::BuildChatPacket(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, nullptr, nullptr, "|cffff8000[Elemental Invasion]|r " + text);
+            sWorldSessionMgr->SendGlobalMessage(&data);
+        }
     }
 
     Map* MapFor(Point const& p, bool load)
