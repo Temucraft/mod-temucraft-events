@@ -37,3 +37,7 @@ The 8 player-facing texts (chat messages, gossip options) are in the `module_str
 module and id plus the locale (`deDE`, `esES`, `frFR`, ...). If a row is missing the English text in the code is used.
 
 Part of the Temucraft modules for AzerothCore 3.3.5a.
+
+## Wild Turkeys (Pilgrim's Bounty)
+
+The Turkey Tracker kill counter also gives run speed (`Temucraft.Events.Turkey.SpeedPerStack` percent per stack, up to `MaxSpeed`). When it runs out it comes back with half the stacks instead of ending (`Halve`). Turkeys respawn after 30 seconds and count as critters (`data/sql/db-world/base/mod_temucraft_events_turkeys.sql`).

@@ -95,3 +95,28 @@ Temucraft.Events.Invasion.InvaderCorpseSeconds = 300
 #        Default:     600
 
 Temucraft.Events.Invasion.LordCorpseSeconds = 600
+
+###################################################################################################
+# WILD TURKEYS (Pilgrim's Bounty)
+#
+#    Temucraft.Events.Turkey.Enable
+#        Description: The Turkey Tracker kill counter also gives run speed, and halves instead of
+#                     ending when it runs out.
+#        Default:     1
+#
+#    Temucraft.Events.Turkey.SpeedPerStack
+#        Description: Run speed in percent for each stack.
+#        Default:     1
+#
+#    Temucraft.Events.Turkey.MaxSpeed
+#        Description: Most run speed in percent.
+#        Default:     30
+#
+#    Temucraft.Events.Turkey.Halve
+#        Description: 1 = when the counter runs out it comes back with half the stacks. 0 = it ends.
+#        Default:     1
+
+Temucraft.Events.Turkey.Enable = 1
+Temucraft.Events.Turkey.SpeedPerStack = 1
+Temucraft.Events.Turkey.MaxSpeed = 30
+Temucraft.Events.Turkey.Halve = 1

@@ -513,8 +513,11 @@ namespace TemucraftEvents
     };
 }
 
+void AddTemucraftTurkeysScripts();
+
 void AddTemucraftEventsScripts()
 {
+    AddTemucraftTurkeysScripts();
     new TemucraftEvents::TemucraftEventsWorld();
     new TemucraftEvents::TemucraftEventsPlayer();
     new TemucraftEvents::TemucraftEventsCommands();
