@@ -36,6 +36,7 @@
 #include "WorldScript.h"
 #include "WorldState.h"
 #include <array>
+#include <atomic>
 #include <vector>
 
 using namespace Acore::ChatCommands;
@@ -350,9 +351,13 @@ namespace TemucraftEvents
             Announce(std::string("The rifts in ") + Elements[e].zoneName + " grow stronger (stage " + std::to_string(stage) + " of " + std::to_string(cfg.stages) + ").");
     }
 
+    void ApplyKills();
+
     void Update(uint32 diff)
     {
+        ApplyKills();
         sTick += diff;
+
         if (sTick < 10 * IN_MILLISECONDS)
             return;
         uint32 elapsed = sTick;
@@ -399,8 +404,15 @@ namespace TemucraftEvents
         }
     }
 
+    // Kills come from map threads (several continents at once), and sWorldState takes no lock: the kill hooks only
+    // count into these atomics, and the world thread (Update) moves the counts into the world states.
+    std::array<std::atomic<uint32>, 4> sPendingKills{};
+    std::array<std::atomic<bool>, 4> sLordDown{};
+
     void OnKill(Creature* killed)
     {
+        // only reads here: the world states and sLords are written on the world thread, which never runs together
+        // with the map threads
         if (!WS(WS_ACTIVE))
             return;
         for (uint8 e = 0; e < Elements.size(); ++e)
@@ -408,19 +420,41 @@ namespace TemucraftEvents
             Element const& el = Elements[e];
             if (killed->GetEntry() == el.invader && Stage(e) <= cfg.stages)
             {
-                uint32 kills = WS(WS_KILLS + e) + 1;
-                SetWS(WS_KILLS + e, kills);
-                if (kills >= cfg.killsPerStage)
-                    RaiseStage(e);
+                ++sPendingKills[e];
                 return;
             }
             if (killed->GetEntry() == el.lord && killed->GetGUID() == sLords[e])
+            {
+                sLordDown[e] = true;
+                return;
+            }
+        }
+    }
+
+    // world thread: the kills counted since the last call
+    void ApplyKills()
+    {
+        bool const active = WS(WS_ACTIVE) != 0;
+        for (uint8 e = 0; e < Elements.size(); ++e)
+        {
+            uint32 const added = sPendingKills[e].exchange(0);
+            bool const lordDown = sLordDown[e].exchange(false);
+            if (!active)
+                continue;
+            Element const& el = Elements[e];
+            if (added && Stage(e) <= cfg.stages)
+            {
+                uint32 kills = WS(WS_KILLS + e) + added;
+                SetWS(WS_KILLS + e, kills);
+                if (kills >= cfg.killsPerStage)
+                    RaiseStage(e);
+            }
+            if (lordDown && !sLords[e].IsEmpty())
             {
                 SetWS(WS_STAGE + e, DoneStage());
                 sLords[e].Clear();
                 CloseRifts(e);
                 Announce(std::string(el.lordName) + " has been slain! The rifts in " + el.zoneName + " fall silent.");
-                return;
             }
         }
     }
